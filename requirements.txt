@@ -1,0 +1,6 @@
+irc.bot
+requests
+twitchio
+asyncio
+spotipy
+simpleaudio

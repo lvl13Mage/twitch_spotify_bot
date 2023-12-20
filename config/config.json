@@ -1,0 +1,26 @@
+{
+    "twitch_client_id": "",
+    "twitch_client_secret": "",
+    "request_command": "false",
+    "affiliate": "true",
+    "spotify_playlist_id": "",
+    "http_basic_user": "mage",
+    "http_basic_password": "",
+    "channel": "thelvl13mage",
+    "spotify_client_id": "",
+    "spotify_client_secret": "",
+    "spotify_redirect_uri": "http://localhost:8888/callback",
+    "spotify_scope": "user-read-currently-playing,user-read-playback-state,user-modify-playback-state,user-read-private,user-read-recently-played,user-library-modify",
+    "spotify_channelpoints": {
+        "Song Request": {
+            "enabled": true,
+            "cost": "10",
+            "description": "Füge lied zur Warteschlange hinzu."
+        },
+        "Add Song to Playlist": {
+            "enabled": true,
+            "cost": "100",
+            "description": "Füge lied zur Playlist hinzu."
+        }
+    }
+}
