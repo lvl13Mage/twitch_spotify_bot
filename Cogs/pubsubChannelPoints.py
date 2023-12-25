@@ -54,10 +54,12 @@ class PubSubChannelPoints(commands.Cog):
                 songtitle = False
                 songObject = spotify.getSong(event.input)
                 inPlaylist = spotify.searchInPlaylist(songObject, self.config["spotify_playlist_id"])
-                pprint(inPlaylist)
+                print("inPlaylist: " + str(inPlaylist))
                 if not inPlaylist:
+                    print("not inPlaylist")
                     songtitle = spotify.addSongToQueue(songObject)
                     spotify.addSongToPlaylist(songObject, self.config["spotify_playlist_id"])
+                print("songtitle: " + str(songtitle))
                 if songtitle:
                     message = f"{event.user.name} hat '{songtitle}' zur Playlist hinzugefügt."
                     await channel.send(message)

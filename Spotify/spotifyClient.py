@@ -19,11 +19,18 @@ class SpotifyClient():
             return results
         
         def getSong(self, songName):
+            print(songName)
+            # trim whitespace from songName
+            songName = songName.strip()
+            print(songName)
             if songName.startswith("spotify:"):
+                print("spotify:")
                 return self.sp.track(songName)
             elif songName.startswith("https://open.spotify.com/"):
+                print("https://open.spotify.com/")
                 return self.sp.track(self.getSongUriFromUrl(songName))
             else:
+                print("else")
                 return self.searchSong(songName, slimit=1)
             
         def getSongUriFromUrl(self, songUrl):
@@ -32,16 +39,30 @@ class SpotifyClient():
             return songUri
     
         def addSongToQueue(self, songObject):
+            if songObject.get("uri") == None:
+                songTitle = songObject["tracks"]["items"][0]["artists"][0]["name"] + " - " + songObject["tracks"]["items"][0]["name"]
+                songUri = songObject["tracks"]["items"][0]["uri"]
+            else:
+                songTitle = songObject["artists"][0]["name"] + " - " + songObject["name"]
+                songUri = songObject["uri"]
+            print("SongUri: " + songUri)
+            print("SongTitle: " + songTitle)
             try:
-                self.sp.add_to_queue(songObject["tracks"]["items"][0]["uri"])
-                return songObject["tracks"]["items"][0]["artists"][0]["name"] + " - " + songObject["tracks"]["items"][0]["name"]
+                self.sp.add_to_queue(songUri)
+                return songTitle
             except:
                 return False
             
         def addSongToPlaylist(self, songObject, playlistId):
+            if songObject.get("uri") == None:
+                songTitle = songObject["tracks"]["items"][0]["artists"][0]["name"] + " - " + songObject["tracks"]["items"][0]["name"]
+                songUri = songObject["tracks"]["items"][0]["uri"]
+            else:
+                songTitle = songObject["artists"][0]["name"] + " - " + songObject["name"]
+                songUri = songObject["uri"]
             try:
                 self.sp.playlist_add_items(playlistId, [songObject["tracks"]["items"][0]["uri"]])
-                return songObject["tracks"]["items"][0]["artists"][0]["name"] + " - " + songObject["tracks"]["items"][0]["name"]
+                return songObject["artists"][0]["name"] + " - " + songObject["name"]
             except:
                 return False
             
@@ -59,7 +80,6 @@ class SpotifyClient():
         
         def getCurrentSong(self):
             results = self.sp.currently_playing()
-            pprint(results)
             return results["item"]["artists"][0]["name"] + " - " + results["item"]["name"]
         
         def getLastSongs(self, limit=10):
@@ -79,13 +99,18 @@ class SpotifyClient():
             limit = 100  # Maximum allowed by Spotify API
             song_found = False
 
+            if songObject.get("uri") == None:
+                songId = songObject["tracks"]["items"][0]["id"]
+            else:
+                songId = songObject["id"]
+
             while True:
                 results = self.sp.playlist_items(playlistId, limit=limit, offset=offset)
                 total = results['total']
 
                 for item in results['items']:
                     # Assuming songObject is the name of the song
-                    if item['track']['id'] == songObject['tracks']['items'][0]['id']:
+                    if item['track']['id'] == songId:
                         song_found = True
                         break
 
