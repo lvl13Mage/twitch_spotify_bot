@@ -8,16 +8,13 @@ class ChannelPointRewards():
         self.bot = bot
         self.config = config
     
-    def create_reward(self, token, reward_name, reward_cost, reward_prompt, reward_input_required):
-        loop = asyncio.get_event_loop()
-        loop.run_until_complete(
-            self.bot.user.create_custom_reward(
-                token=self.bot.config['twitch_access_token'],
-                title=reward_name,
-                cost=reward_cost,
-                prompt=reward_prompt,
-                input_required=reward_input_required
-            )
+    async def create_reward(self, token, reward_name, reward_cost, reward_prompt, reward_input_required):
+        await self.bot.user.create_custom_reward(
+            token=self.bot.config['twitch_access_token'],
+            title=reward_name,
+            cost=reward_cost,
+            prompt=reward_prompt,
+            input_required=reward_input_required
         )
     
     async def get_rewards(self, token):
@@ -35,7 +32,7 @@ class ChannelPointRewards():
                 await self.update_reward(token, reward.id, reward_name, reward_cost, reward_prompt, reward_input_required, status)
                 return
         if count == 0:
-            self.create_reward(token, reward_name, reward_cost, reward_prompt, reward_input_required)
+           await self.create_reward(token, reward_name, reward_cost, reward_prompt, reward_input_required)
     
     async def disable_reward(self, token, reward_name,  reward_cost, reward_prompt, reward_input_required, status):
         rewards = await self.get_rewards(token)
