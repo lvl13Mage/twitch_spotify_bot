@@ -44,7 +44,6 @@ class PubSubChannelPoints(commands.Cog):
                 pprint(songObject)
                 if songObject != False:
                     songtitle = spotify.addSongToQueue(songObject)
-                    songtitle = spotify.addSongToQueue(songObject)
                 if songtitle:
                     message = f"{event.user.name} hat '{songtitle}' zur Warteschlange hinzugefügt."
                     await channel.send(message)
