@@ -9,8 +9,8 @@ Twitch Developer Bot Credentials (client_id + client_secret) -> https://dev.twit
 Spotify Developer Bot Credentials (client_id + client_secret) -> https://developer.spotify.com/
 
 Install:
-1. Create Spotify APP with callback http://localhost:8888
-2. Create Twitch APP with callback http://löcalhost:4000
+1. Create Spotify APP with callback http://localhost:8888/callback
+2. Create Twitch APP with callback http://löcalhost:4000 and https://localhost
 3. Unzip dir
 4. Fill in credentials to config/config.json (important are twitch_client_id, twitch_client_secret, spotify_client_id, spotify_client_secret)
 5. Run setupBot.bat (installs python dependencies)
