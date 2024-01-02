@@ -25,13 +25,23 @@ class SpotifyClient():
             print(songName)
             if songName.startswith("spotify:"):
                 print("spotify:")
-                return self.sp.track(songName)
+                try:
+                    return self.sp.track(songName)
+                except:
+                    return False
             elif songName.startswith("https://open.spotify.com/"):
                 print("https://open.spotify.com/")
-                return self.sp.track(self.getSongUriFromUrl(songName))
+                try:
+                    return self.sp.track(self.getSongUriFromUrl(songName))
+                except:
+                    return False
             else:
                 print("else")
-                return self.searchSong(songName, slimit=1)
+                try:
+                    searchResults = self.searchSong(songName, slimit=1)
+                    return self.sp.track(searchResults["tracks"]["items"][0]["uri"])
+                except:
+                    return False
             
         def getSongUriFromUrl(self, songUrl):
             songId = urlparse(songUrl).path.split("/")[-1]
@@ -39,12 +49,8 @@ class SpotifyClient():
             return songUri
     
         def addSongToQueue(self, songObject):
-            if songObject.get("uri") == None:
-                songTitle = songObject["tracks"]["items"][0]["artists"][0]["name"] + " - " + songObject["tracks"]["items"][0]["name"]
-                songUri = songObject["tracks"]["items"][0]["uri"]
-            else:
-                songTitle = songObject["artists"][0]["name"] + " - " + songObject["name"]
-                songUri = songObject["uri"]
+            songTitle = songObject["artists"][0]["name"] + " - " + songObject["name"]
+            songUri = songObject["uri"]
             print("SongUri: " + songUri)
             print("SongTitle: " + songTitle)
             try:
@@ -54,14 +60,9 @@ class SpotifyClient():
                 return False
             
         def addSongToPlaylist(self, songObject, playlistId):
-            if songObject.get("uri") == None:
-                songTitle = songObject["tracks"]["items"][0]["artists"][0]["name"] + " - " + songObject["tracks"]["items"][0]["name"]
-                songUri = songObject["tracks"]["items"][0]["uri"]
-            else:
-                songTitle = songObject["artists"][0]["name"] + " - " + songObject["name"]
-                songUri = songObject["uri"]
+            songUri = songObject["uri"]
             try:
-                self.sp.playlist_add_items(playlistId, [songObject["tracks"]["items"][0]["uri"]])
+                self.sp.playlist_add_items(playlistId, [songUri])
                 return songObject["artists"][0]["name"] + " - " + songObject["name"]
             except:
                 return False
@@ -99,10 +100,7 @@ class SpotifyClient():
             limit = 100  # Maximum allowed by Spotify API
             song_found = False
 
-            if songObject.get("uri") == None:
-                songId = songObject["tracks"]["items"][0]["id"]
-            else:
-                songId = songObject["id"]
+            songId = songObject["id"]
 
             while True:
                 results = self.sp.playlist_items(playlistId, limit=limit, offset=offset)

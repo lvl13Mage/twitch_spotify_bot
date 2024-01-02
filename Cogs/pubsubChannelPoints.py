@@ -41,7 +41,10 @@ class PubSubChannelPoints(commands.Cog):
             case "Song Request":
                 songtitle = False
                 songObject = spotify.getSong(event.input)
-                songtitle = spotify.addSongToQueue(songObject)
+                pprint(songObject)
+                if songObject != False:
+                    songtitle = spotify.addSongToQueue(songObject)
+                    songtitle = spotify.addSongToQueue(songObject)
                 if songtitle:
                     message = f"{event.user.name} hat '{songtitle}' zur Warteschlange hinzugefügt."
                     await channel.send(message)
@@ -53,12 +56,14 @@ class PubSubChannelPoints(commands.Cog):
             case "Add Song to Playlist":
                 songtitle = False
                 songObject = spotify.getSong(event.input)
-                inPlaylist = spotify.searchInPlaylist(songObject, self.config["spotify_playlist_id"])
-                print("inPlaylist: " + str(inPlaylist))
-                if not inPlaylist:
-                    print("not inPlaylist")
-                    songtitle = spotify.addSongToQueue(songObject)
-                    spotify.addSongToPlaylist(songObject, self.config["spotify_playlist_id"])
+                inPlaylist = False
+                if songObject != False:
+                    inPlaylist = spotify.searchInPlaylist(songObject, self.config["spotify_playlist_id"])
+                    print("inPlaylist: " + str(inPlaylist))
+                    if not inPlaylist:
+                        print("not inPlaylist")
+                        songtitle = spotify.addSongToQueue(songObject)
+                        spotify.addSongToPlaylist(songObject, self.config["spotify_playlist_id"])
                 print("songtitle: " + str(songtitle))
                 if songtitle:
                     message = f"{event.user.name} hat '{songtitle}' zur Playlist hinzugefügt."

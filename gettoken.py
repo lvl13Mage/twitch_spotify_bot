@@ -83,12 +83,13 @@ class Token:
             'client_secret': self.client_secret,
             'code': code,
             'grant_type': 'authorization_code',
-            'redirect_uri': 'https://localhost'
+            'redirect_uri': 'http://localhost:4000'
         }
         headers = {
             'Content-Type': 'application/x-www-form-urlencoded'
         }
         response = requests.post(url, headers=headers, data=urllib.parse.urlencode(params))
+        
         return response.json()['access_token']
 
     def get_user_id(self):

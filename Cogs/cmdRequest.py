@@ -27,12 +27,17 @@ class CmdRequest(commands.Cog):
         if self.config["request_command"] != 'true':
             return
         spotify = SpotifyClient(self.config)
-        song = spotify.getSong(songname)
-        songtitle = spotify.addSongToQueue(song)
+        songtitle = False
+        songObject = spotify.getSong(songname)
+        pprint(songObject)
+        if songObject != False:
+            songtitle = spotify.addSongToQueue(songObject)
         if songtitle:
-            await ctx.send(f"{ctx.author.name} hat '{songtitle}' zur Warteschlange hinzugefügt.")
+            message = f"{ctx.author.name} hat '{songtitle}' zur Warteschlange hinzugefügt."
+            await ctx.send(message)
         else:
-            await ctx.send(f"Sorry {ctx.author.name}, der Song {songname} konnte nicht gefunden werden.")
+            message = f"Sorry {ctx.author.name}, der Song {songname} konnte nicht gefunden werden."
+            await ctx.send(message)
 
     @commands.command(name="queue", aliases=["sq", "songqueue"])
     @commands.cooldown(rate=1, per=25, bucket=commands.Bucket.user)
