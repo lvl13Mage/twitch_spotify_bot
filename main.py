@@ -17,7 +17,21 @@ import asyncio
 #    loop.run_until_complete(channelPointRewards.disable_reward(config['twitch_access_token'], "Add Song to Playlist"))
 #    print("TwioBot stopped.")
 
-config = open('config/config.json', 'r')
+# read argument --config and load config file or use default config file
+import argparse
+parser = argparse.ArgumentParser()
+parser.add_argument('--config', help='config file')
+args = parser.parse_args()
+if args.config:
+    print("Using config file: " + args.config)
+    config_path = os.path.normpath(args.config)
+    print(config_path)
+    config = open(config_path, 'r')
+else:
+    config = open('config/config.json', 'r')
+
+#config = open('config/config.json', 'r')
+#config = open('C:\\Users\\flori\\config.json.txt', 'r')
 config = json.load(config)
 
 print("Getting access token...")
