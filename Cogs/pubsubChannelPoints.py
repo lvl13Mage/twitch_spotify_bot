@@ -9,6 +9,7 @@ import time
 import simpleaudio as sa
 from pprint import pprint
 from Spotify.spotifyClient import SpotifyClient
+from JsonPersistence.jsonSongerequestStorageHandler import JsonSongRequestStorageHandler
 
 class PubSubChannelPoints(commands.Cog):
 
@@ -39,6 +40,7 @@ class PubSubChannelPoints(commands.Cog):
 
         match rewardName:
             case "Song Request":
+                songerequestStorageHandler = JsonSongRequestStorageHandler("songrequest.json")
                 songtitle = False
                 songObject = spotify.getSong(event.input)
                 pprint(songObject)
@@ -47,6 +49,7 @@ class PubSubChannelPoints(commands.Cog):
                 if songtitle:
                     message = f"{event.user.name} hat '{songtitle}' zur Warteschlange hinzugefügt."
                     await channel.send(message)
+                    songerequestStorageHandler.add_entry(id=event.id, spotifyid=songObject["id"], artist=songObject["artists"][0]["name"], songname=songObject["name"], username=event.user.name)
                     self.reward_update_status(event.reward.id, event.id, "FULFILLED")
                 else:
                     message = f"Sorry {event.user.name}, der Song {event.input} konnte nicht gefunden werden."

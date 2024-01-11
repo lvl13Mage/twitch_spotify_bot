@@ -79,6 +79,10 @@ class SpotifyClient():
                 songlist.append(artists + " - " + results["queue"][i]["name"])
             return songlist
         
+        def getCurrentSongObject(self):
+            results = self.sp.currently_playing()
+            return results["item"]
+        
         def getCurrentSong(self):
             results = self.sp.currently_playing()
             return results["item"]["artists"][0]["name"] + " - " + results["item"]["name"]

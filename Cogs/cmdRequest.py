@@ -1,6 +1,7 @@
 from twitchio.ext import commands
 from Spotify.spotifyClient import SpotifyClient
 from pprint import pprint
+from JsonPersistence.jsonSongerequestStorageHandler import JsonSongRequestStorageHandler
 
 class CmdRequest(commands.Cog):
 
@@ -76,9 +77,20 @@ class CmdRequest(commands.Cog):
     @commands.command(name="currentsong", aliases=["cs"])
     @commands.cooldown(rate=1, per=25, bucket=commands.Bucket.user)
     async def currentsong(self, ctx: commands.Context):
-        spotify = SpotifyClient(self.config)
-        currentSong = spotify.getCurrentSong()
-        await ctx.send(f"Der aktuelle Song ist: {currentSong}")
+        try:
+            songRequestHandler = JsonSongRequestStorageHandler("songrequest.json")
+            spotify = SpotifyClient(self.config)
+            currentSongObject = spotify.getCurrentSongObject()
+            currentSong = currentSongObject["artists"][0]["name"] + " - " + currentSongObject["name"]
+            songRequestHandler.pop_until_song(currentSongObject["id"])
+            useradded = songRequestHandler.fetch_by_spotifyid(currentSongObject["id"])
+            pprint(useradded)
+            if len(useradded) == 0:
+                await ctx.send(f"Der aktuelle Song ist: {currentSong}")
+            else:
+                await ctx.send(f"Der aktuelle Song ist: {currentSong} -- added by {useradded[0]["username"]}")
+        except commands.CommandOnCooldown as e:
+            await ctx.send(f"Sorry {ctx.author.name}, der Befehl ist noch auf Cooldown.")
 
     @commands.command(name="searchsong", aliases=["findsong", "fs"])
     @commands.cooldown(rate=1, per=25, bucket=commands.Bucket.user)
@@ -106,7 +118,8 @@ class CmdRequest(commands.Cog):
         await ctx.send(f"Song wurde übersprungen von {ctx.author.name}.")
 
     # TODO: does not fucking work
-    async def event_command_error(self, ctx: commands.Context, error: Exception) -> None:
+    async def cog_command_error(self, ctx: commands.Context, error: Exception) -> None:
+        print("Error Handler?")
         if isinstance(error, commands.CommandNotFound):
             return
         elif isinstance(error, commands.CommandOnCooldown):

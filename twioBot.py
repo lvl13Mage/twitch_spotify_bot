@@ -21,6 +21,16 @@ class Bot(commands.Bot):
         if self.config['affiliate'] == 'true':
             await self.enable_rewards()
         # print refresh token
+            
+    async def event_command_error(self, context: commands.Context, error: Exception):
+        if isinstance(error, commands.CommandNotFound):
+            return
+        elif isinstance(error, commands.CommandOnCooldown):
+            await context.send(f"Sorry {context.author.name}, der Befehl ist noch für {error.retry_after:.2f}s auf Cooldown.")
+            raise error
+        else:
+            await context.send(f"Sorry {context.author.name}, es ist ein Fehler aufgetreten.")
+            raise error
 
     async def setup(self):
         self.user = await self.getUser()
