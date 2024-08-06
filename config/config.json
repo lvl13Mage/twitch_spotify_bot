@@ -10,7 +10,7 @@
     "spotify_client_id": "",
     "spotify_client_secret": "",
     "spotify_redirect_uri": "http://localhost:8888/callback",
-    "spotify_scope": "user-read-currently-playing,user-read-playback-state,user-modify-playback-state,user-read-private,user-read-recently-played,user-library-modify",
+    "spotify_scope": "user-read-currently-playing,user-read-playback-state,user-modify-playback-state,user-read-private,user-read-recently-played,user-library-modify,playlist-read-private,playlist-modify-public,playlist-modify-private",
     "spotify_channelpoints": {
         "Song Request": {
             "enabled": true,
